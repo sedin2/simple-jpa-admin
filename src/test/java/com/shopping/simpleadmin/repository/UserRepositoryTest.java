@@ -4,8 +4,8 @@ import com.shopping.simpleadmin.SimpleAdminApplicationTests;
 import com.shopping.simpleadmin.model.entitiy.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -19,6 +19,7 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
     private UserRepository userRepository;
 
     @Test
+    @Transactional
     public void create() {
         User user = new User();
         user.setAccount("TestUser01");
@@ -26,16 +27,22 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
         user.setPhoneNumber("010-1111-2222");
         user.setCreatedAt(LocalDateTime.now());
         user.setCreatedBy("TestUser01");
-
         User newUser = userRepository.save(user);
-        System.out.println("newUser :" + newUser);
     }
 
     @Test
     public void read() {
-        Optional<User> user = userRepository.findById(1L);
+        User user = new User();
+        user.setAccount("TestUser01");
+        user.setEmail("TestUser01@mail.com");
+        user.setPhoneNumber("010-1111-2222");
+        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedBy("TestUser01");
+        userRepository.save(user);
 
-        user.ifPresent(selectedUser -> {
+        Optional<User> newUser = userRepository.findById(1L);
+
+        newUser.ifPresent(selectedUser -> {
             System.out.println("user : " + selectedUser);
             System.out.println("email : " + selectedUser.getEmail());
         });
@@ -44,9 +51,17 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
     @Test
     @Transactional
     public void update() {
-        Optional<User> user = userRepository.findById(1L);
+        User user = new User();
+        user.setAccount("TestUser01");
+        user.setEmail("TestUser01@mail.com");
+        user.setPhoneNumber("010-1111-2222");
+        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedBy("TestUser01");
+        userRepository.save(user);
 
-        user.ifPresent(selectUser -> {
+        Optional<User> newUser = userRepository.findById(1L);
+
+        newUser.ifPresent(selectUser -> {
             selectUser.setAccount("aaaa");
             selectUser.setUpdatedAt(LocalDateTime.now());
             selectUser.setUpdatedBy("UpdateUser");
@@ -58,10 +73,18 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
     @Test
     @Transactional
     public void delete() {
-        Optional<User> user = userRepository.findById(2L);
-        assertThat(user.isPresent(), is(equalTo(true)));
-        user.ifPresent(selectUser -> userRepository.delete(selectUser));
-        Optional<User> deleteUser = userRepository.findById(2L);
+        User user = new User();
+        user.setAccount("TestUser01");
+        user.setEmail("TestUser01@mail.com");
+        user.setPhoneNumber("010-1111-2222");
+        user.setCreatedAt(LocalDateTime.now());
+        user.setCreatedBy("TestUser01");
+        userRepository.save(user);
+
+        Optional<User> newUser = userRepository.findById(1L);
+        assertThat(newUser.isPresent(), is(equalTo(true)));
+        newUser.ifPresent(selectUser -> userRepository.delete(selectUser));
+        Optional<User> deleteUser = userRepository.findById(1L);
         assertThat(deleteUser.isPresent(), is(equalTo(false)));
     }
 }
