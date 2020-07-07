@@ -21,30 +21,33 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
     @Test
     @Transactional
     public void create() {
-        User user = new User();
-        user.setAccount("TestUser01");
-        user.setEmail("TestUser01@mail.com");
-        user.setPhoneNumber("010-1111-2222");
-        user.setCreatedAt(LocalDateTime.now());
-        user.setCreatedBy("TestUser01");
-        User newUser = userRepository.save(user);
+        User user = User.builder()
+                        .account("TestUser01")
+                        .email("TestUser01@mail.com")
+                        .phoneNumber("010-1111-2222")
+                        .createdAt(LocalDateTime.now())
+                        .createdBy("TestUser01")
+                        .build();
+        userRepository.save(user);
     }
 
     @Test
     public void read() {
-        User user = new User();
-        user.setAccount("TestUser01");
-        user.setEmail("TestUser01@mail.com");
-        user.setPhoneNumber("010-1111-2222");
-        user.setCreatedAt(LocalDateTime.now());
-        user.setCreatedBy("TestUser01");
+        User user = User.builder()
+                        .account("TestUser01")
+                        .email("TestUser01@mail.com")
+                        .phoneNumber("010-1111-2222")
+                        .createdAt(LocalDateTime.now())
+                        .createdBy("TestUser01")
+                        .build();
         userRepository.save(user);
 
         Optional<User> newUser = userRepository.findById(1L);
 
         newUser.ifPresent(selectedUser -> {
-            System.out.println("user : " + selectedUser);
-            System.out.println("email : " + selectedUser.getEmail());
+            selectedUser.getOrderDetailList().stream().forEach(orderDetail -> {
+                System.out.println(orderDetail.getItem());
+            });
         });
     }
 
