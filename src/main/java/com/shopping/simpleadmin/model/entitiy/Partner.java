@@ -16,23 +16,25 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Builder
-public class Item {
+public class Partner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String status;
-
     private String name;
 
-    private String title;
+    private String status;
 
-    private String content;
+    private String address;
 
-    private Integer price;
+    private String callCenter;
 
-    private String brandName;
+    private String partnerNumber;
+
+    private String businessNumber;
+
+    private String ceoName;
 
     private LocalDateTime registeredAt;
 
