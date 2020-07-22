@@ -32,6 +32,7 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
     }
 
     @Test
+    @Transactional
     public void read() {
         User user = User.builder()
                         .account("TestUser01")
@@ -44,11 +45,11 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
 
         Optional<User> newUser = userRepository.findById(1L);
 
-        newUser.ifPresent(selectedUser -> {
-            selectedUser.getOrderDetailList().stream().forEach(orderDetail -> {
-                System.out.println(orderDetail.getItem());
-            });
-        });
+//        newUser.ifPresent(selectedUser -> {
+//            selectedUser.getOrderDetailList().stream().forEach(orderDetail -> {
+//                System.out.println(orderDetail.getItem());
+//            });
+//        });
     }
 
     @Test
@@ -85,8 +86,10 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
         userRepository.save(user);
 
         Optional<User> newUser = userRepository.findById(1L);
-        assertThat(newUser.isPresent(), is(equalTo(true)));
-        newUser.ifPresent(selectUser -> userRepository.delete(selectUser));
+        newUser.ifPresent(u -> {
+            assertThat(u.getId(), equalTo(1L));
+        });
+
         Optional<User> deleteUser = userRepository.findById(1L);
         assertThat(deleteUser.isPresent(), is(equalTo(false)));
     }
