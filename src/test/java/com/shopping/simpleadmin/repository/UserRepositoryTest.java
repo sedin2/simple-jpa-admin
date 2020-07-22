@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class UserRepositoryTest extends SimpleAdminApplicationTests {
 
@@ -28,7 +27,7 @@ public class UserRepositoryTest extends SimpleAdminApplicationTests {
                         .createdAt(LocalDateTime.now())
                         .createdBy("TestUser01")
                         .build();
-        userRepository.save(user);
+        assertThat(userRepository.save(user), is(notNullValue()));
     }
 
     @Test

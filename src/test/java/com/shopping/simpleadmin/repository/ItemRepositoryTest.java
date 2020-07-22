@@ -5,10 +5,12 @@ import com.shopping.simpleadmin.model.entitiy.Item;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class ItemRepositoryTest extends SimpleAdminApplicationTests {
 
@@ -30,7 +32,7 @@ public class ItemRepositoryTest extends SimpleAdminApplicationTests {
                         .createdBy("Partner01")
                         .partnerId(1L)
                         .build();
-        Assert.notNull(itemRepository.save(item));
+        assertThat(itemRepository.save(item), is(notNullValue()));
     }
 
     @Test
@@ -41,11 +43,11 @@ public class ItemRepositoryTest extends SimpleAdminApplicationTests {
                         .price(100000)
                         .content("SAMSUNG NOTEBOOK")
                         .build();
-        Assert.notNull(itemRepository.save(item));
+        assertThat(itemRepository.save(item), is(notNullValue()));
 
         Optional<Item> selectedItem = itemRepository.findById(1L);
 
-        Assert.isTrue(selectedItem.isPresent());
+        assertThat(selectedItem.isPresent(), equalTo(true));
     }
 
     @Test

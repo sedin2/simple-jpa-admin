@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,13 +20,11 @@ public class OrderDetail {
 
     private String status;
 
-    private LocalDateTime arrivalDate;
+    private LocalDate arrivalDate;
 
     private Integer quantity;
 
     private BigDecimal totalPrice;
-
-    private LocalDateTime orderAt;
 
     private LocalDateTime createdAt;
 
@@ -34,4 +33,8 @@ public class OrderDetail {
     private LocalDateTime updatedAt;
 
     private String updatedBy;
+
+    private Long itemId;
+
+    private Long orderGroupId;
 }

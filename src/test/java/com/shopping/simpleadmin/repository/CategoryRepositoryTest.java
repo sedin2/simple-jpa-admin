@@ -20,24 +20,13 @@ class CategoryRepositoryTest extends SimpleAdminApplicationTests {
     @Test
     @Transactional
     public void create() {
-        String type = "Computer";
-        String title = "컴퓨터";
-        LocalDateTime createdAt = LocalDateTime.now();
-        String createdBy = "AdminUser";
-
-        Category category = new Category();
-        category.setType(type);
-        category.setTitle(title);
-        category.setCreatedAt(createdAt);
-        category.setCreatedBy(createdBy);
-
-        Category newCategory = categoryRepository.save(category);
-
-        assertThat(newCategory, is(notNullValue()));
-        assertThat(newCategory.getType(), equalTo(type));
-        assertThat(newCategory.getTitle(), equalTo(title));
-        assertThat(newCategory.getCreatedAt(), equalTo(createdAt));
-        assertThat(newCategory.getCreatedBy(), equalTo(createdBy));
+        Category category = Category.builder()
+                                    .type("Computer")
+                                    .title("컴퓨터")
+                                    .createdAt(LocalDateTime.now())
+                                    .createdBy("AdminUser")
+                                    .build();
+        assertThat(categoryRepository.save(category), is(notNullValue()));
     }
 
     @Test

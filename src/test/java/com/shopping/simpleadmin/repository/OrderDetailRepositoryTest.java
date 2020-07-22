@@ -1,14 +1,18 @@
 package com.shopping.simpleadmin.repository;
 
 import com.shopping.simpleadmin.SimpleAdminApplicationTests;
-import com.shopping.simpleadmin.model.entitiy.Item;
 import com.shopping.simpleadmin.model.entitiy.OrderDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class OrderDetailRepositoryTest extends SimpleAdminApplicationTests {
 
@@ -18,17 +22,17 @@ public class OrderDetailRepositoryTest extends SimpleAdminApplicationTests {
     @Test
     @Transactional
     public void create() {
-//        Item item = Item.builder()
-//                .name("노트북")
-//                .price(100000)
-//                .content("SAMSUNG NOTEBOOK")
-//                .build();
-//        Assert.notNull(itemRepository.save(item));
-
         OrderDetail orderDetail = OrderDetail.builder()
-                                             .orderAt(LocalDateTime.now())
+                                             .status("Waiting")
+                                             .arrivalDate(LocalDate.now().plusDays(2L))
+                                             .quantity(1)
+                                             .totalPrice(BigDecimal.valueOf(900000))
+                                             .createdAt(LocalDateTime.now())
+                                             .createdBy("AdminServer")
+                                             .itemId(1L)
+                                             .orderGroupId(1L)
                                              .build();
-        Assert.notNull(orderDetailRepository.save(orderDetail));
+        assertThat(orderDetailRepository.save(orderDetail), is(notNullValue()));
     }
 
     @Test

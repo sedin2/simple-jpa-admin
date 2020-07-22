@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 class PartnerRepositoryTest extends SimpleAdminApplicationTests {
 
@@ -33,9 +33,7 @@ class PartnerRepositoryTest extends SimpleAdminApplicationTests {
                                  .createdBy("AdminServer")
                                  .categoryId(1L)
                                  .build();
-
-        Partner newPartner = partnerRepository.save(partner);
-        assertThat(newPartner.getName(), equalTo("Partner01"));
+        assertThat(partnerRepository.save(partner), is(notNullValue()));
     }
 
     @Test
