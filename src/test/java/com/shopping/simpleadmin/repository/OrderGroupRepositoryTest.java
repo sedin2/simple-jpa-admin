@@ -33,7 +33,7 @@ class OrderGroupRepositoryTest extends SimpleAdminApplicationTests {
                                           .arrivalDate(LocalDateTime.now())
                                           .createdAt(LocalDateTime.now())
                                           .createdBy("AdminServer")
-                                          .userId(1L)
+//                                          .userId(1L)
                                           .build();
         assertThat(orderGroupRepository.save(orderGroup), is(notNullValue()));
     }

@@ -29,8 +29,8 @@ public class OrderDetailRepositoryTest extends SimpleAdminApplicationTests {
                                              .totalPrice(BigDecimal.valueOf(900000))
                                              .createdAt(LocalDateTime.now())
                                              .createdBy("AdminServer")
-                                             .itemId(1L)
-                                             .orderGroupId(1L)
+//                                             .itemId(1L)
+//                                             .orderGroupId(1L)
                                              .build();
         assertThat(orderDetailRepository.save(orderDetail), is(notNullValue()));
     }

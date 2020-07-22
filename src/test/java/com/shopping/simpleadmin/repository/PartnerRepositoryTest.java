@@ -31,7 +31,7 @@ class PartnerRepositoryTest extends SimpleAdminApplicationTests {
                                  .registeredAt(LocalDateTime.now())
                                  .createdAt(LocalDateTime.now())
                                  .createdBy("AdminServer")
-                                 .categoryId(1L)
+//                                 .categoryId(1L)
                                  .build();
         assertThat(partnerRepository.save(partner), is(notNullValue()));
     }
@@ -50,7 +50,7 @@ class PartnerRepositoryTest extends SimpleAdminApplicationTests {
                                  .registeredAt(LocalDateTime.now())
                                  .createdAt(LocalDateTime.now())
                                  .createdBy("AdminServer")
-                                 .categoryId(1L)
+//                                 .categoryId(1L)
                                  .build();
 
         Partner newPartner = partnerRepository.save(partner);

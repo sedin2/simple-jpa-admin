@@ -30,7 +30,7 @@ public class ItemRepositoryTest extends SimpleAdminApplicationTests {
                         .registeredAt(LocalDateTime.now())
                         .createdAt(LocalDateTime.now())
                         .createdBy("Partner01")
-                        .partnerId(1L)
+//                        .partnerId(1L)
                         .build();
         assertThat(itemRepository.save(item), is(notNullValue()));
     }
