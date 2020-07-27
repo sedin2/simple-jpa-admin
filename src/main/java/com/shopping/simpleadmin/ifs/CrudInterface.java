@@ -2,13 +2,13 @@ package com.shopping.simpleadmin.ifs;
 
 import com.shopping.simpleadmin.model.network.Header;
 
-public interface CrudInterface {
+public interface CrudInterface<Request, Response> {
 
-    Header create();
+    Header<Response> create(Header<Request> request);
 
-    Header read(Long id);
+    Header<Response> read(Long id);
 
-    Header update();
+    Header<Response> update(Header<Request> request);
 
-    Header delete(Long id);
+    Header<Response> delete(Long id);
 }
