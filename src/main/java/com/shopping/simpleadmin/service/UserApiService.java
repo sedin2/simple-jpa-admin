@@ -35,7 +35,9 @@ public class UserApiService implements CrudInterface<UserApiRequest, UserApiResp
 
     @Override
     public Header<UserApiResponse> read(Long id) {
-        return null;
+        return userRepository.findById(id)
+                             .map(user -> response(user))
+                             .orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
 
     @Override
