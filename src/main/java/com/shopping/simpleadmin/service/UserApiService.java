@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserApiService implements CrudInterface<UserApiRequest, UserApiResponse> {
@@ -42,12 +43,30 @@ public class UserApiService implements CrudInterface<UserApiRequest, UserApiResp
 
     @Override
     public Header<UserApiResponse> update(Header<UserApiRequest> request) {
-        return null;
+        UserApiRequest userApiRequest = request.getData();
+        Optional<User> optionalUser = userRepository.findById(userApiRequest.getId());
+        return optionalUser.map(user -> {
+            user.setAccount(user.getAccount())
+                    .setPassword(userApiRequest.getPassword())
+                    .setStatus(userApiRequest.getStatus())
+                    .setPhoneNumber(userApiRequest.getPhoneNumber())
+                    .setEmail(userApiRequest.getEmail())
+                    .setRegisteredAt(userApiRequest.getRegisteredAt())
+                    .setUnregisteredAt(userApiRequest.getUnregisteredAt());
+            return user;
+        }).map(user -> userRepository.save(user))
+          .map(updatedUser -> response(updatedUser))
+          .orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
 
     @Override
-    public Header<UserApiResponse> delete(Long id) {
-        return null;
+    public Header delete(Long id) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    userRepository.delete(user);
+                    return Header.OK();
+                })
+                .orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
 
     private Header<UserApiResponse> response(User user) {
