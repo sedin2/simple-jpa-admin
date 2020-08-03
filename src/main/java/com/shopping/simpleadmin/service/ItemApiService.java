@@ -43,17 +43,34 @@ public class ItemApiService implements CrudInterface<ItemApiRequest, ItemApiResp
 
     @Override
     public Header<ItemApiResponse> read(Long id) {
-        return null;
+        return itemRepository.findById(id)
+                             .map(item -> response(item))
+                             .orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
 
     @Override
     public Header<ItemApiResponse> update(@RequestBody Header<ItemApiRequest> request) {
-        return null;
+        ItemApiRequest itemApiRequest = request.getData();
+        return itemRepository.findById(itemApiRequest.getId())
+                             .map(entityItem -> entityItem.setStatus(itemApiRequest.getStatus())
+                                                          .setName(itemApiRequest.getName())
+                                                          .setTitle(itemApiRequest.getTitle())
+                                                          .setContent(itemApiRequest.getContent())
+                                                          .setPrice(itemApiRequest.getPrice())
+                                                          .setBrandName(itemApiRequest.getBrandName())
+                                                          .setRegisteredAt(itemApiRequest.getRegisteredAt())
+                                                          .setUnregisteredAt(itemApiRequest.getUnregisteredAt()))
+                             .map(newEntityItem -> itemRepository.save(newEntityItem))
+                             .map(item -> response(item))
+                             .orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
 
     @Override
-    public Header<ItemApiResponse> delete(Long id) {
-        return null;
+    public Header delete(Long id) {
+        return itemRepository.findById(id).map(item -> {
+            itemRepository.delete(item);
+            return Header.OK();
+        }).orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
 
     private Header<ItemApiResponse> response(Item item) {
