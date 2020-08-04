@@ -2,6 +2,7 @@ package com.shopping.simpleadmin.service;
 
 import com.shopping.simpleadmin.ifs.CrudInterface;
 import com.shopping.simpleadmin.model.entitiy.User;
+import com.shopping.simpleadmin.model.enumclass.UserStatus;
 import com.shopping.simpleadmin.model.network.Header;
 import com.shopping.simpleadmin.model.network.request.UserApiRequest;
 import com.shopping.simpleadmin.model.network.response.UserApiResponse;
@@ -24,7 +25,7 @@ public class UserApiService implements CrudInterface<UserApiRequest, UserApiResp
         User user = User.builder()
                         .account(userApiRequest.getAccount())
                         .password(userApiRequest.getPassword())
-                        .status("Registered")
+                        .status(UserStatus.REGISTERED)
                         .email(userApiRequest.getEmail())
                         .phoneNumber(userApiRequest.getPhoneNumber())
                         .registeredAt(LocalDateTime.now())
