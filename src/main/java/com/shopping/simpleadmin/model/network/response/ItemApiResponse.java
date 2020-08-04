@@ -1,5 +1,6 @@
 package com.shopping.simpleadmin.model.network.response;
 
+import com.shopping.simpleadmin.model.enumclass.ItemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class ItemApiResponse {
 
     private Long id;
 
-    private String status;
+    private ItemStatus status;
 
     private String name;
 

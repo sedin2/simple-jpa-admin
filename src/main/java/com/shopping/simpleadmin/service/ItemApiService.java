@@ -2,6 +2,7 @@ package com.shopping.simpleadmin.service;
 
 import com.shopping.simpleadmin.ifs.CrudInterface;
 import com.shopping.simpleadmin.model.entitiy.Item;
+import com.shopping.simpleadmin.model.enumclass.ItemStatus;
 import com.shopping.simpleadmin.model.network.Header;
 import com.shopping.simpleadmin.model.network.request.ItemApiRequest;
 import com.shopping.simpleadmin.model.network.response.ItemApiResponse;
@@ -27,7 +28,7 @@ public class ItemApiService implements CrudInterface<ItemApiRequest, ItemApiResp
     public Header<ItemApiResponse> create(@RequestBody Header<ItemApiRequest> request) {
         ItemApiRequest itemApiRequest = request.getData();
         Item item = Item.builder()
-                        .status(itemApiRequest.getStatus())
+                        .status(ItemStatus.REGISTERED)
                         .name(itemApiRequest.getName())
                         .title(itemApiRequest.getTitle())
                         .content(itemApiRequest.getContent())
