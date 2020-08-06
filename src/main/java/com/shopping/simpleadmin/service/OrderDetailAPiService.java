@@ -1,12 +1,10 @@
 package com.shopping.simpleadmin.service;
 
-import com.shopping.simpleadmin.ifs.CrudInterface;
 import com.shopping.simpleadmin.model.entitiy.OrderDetail;
 import com.shopping.simpleadmin.model.network.Header;
 import com.shopping.simpleadmin.model.network.request.OrderDetailApiRequest;
 import com.shopping.simpleadmin.model.network.response.OrderDetailApiResponse;
 import com.shopping.simpleadmin.repository.ItemRepository;
-import com.shopping.simpleadmin.repository.OrderDetailRepository;
 import com.shopping.simpleadmin.repository.OrderGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
 @Service
-public class OrderDetailAPiService implements CrudInterface<OrderDetailApiRequest, OrderDetailApiResponse> {
-
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
+public class OrderDetailAPiService extends BaseService<OrderDetailApiRequest, OrderDetailApiResponse, OrderDetail> {
 
     @Autowired
     private ItemRepository itemRepository;
@@ -36,13 +31,13 @@ public class OrderDetailAPiService implements CrudInterface<OrderDetailApiReques
                                              .item(itemRepository.findById(orderDetailApiRequest.getItemId()).orElseThrow(NoSuchElementException::new))
                                              .orderGroup(orderGroupRepository.findById(orderDetailApiRequest.getOrderGroupId()).orElseThrow(NoSuchElementException::new))
                                              .build();
-        OrderDetail newOrderDetail = orderDetailRepository.save(orderDetail);
+        OrderDetail newOrderDetail = baseRepository.save(orderDetail);
         return response(newOrderDetail);
     }
 
     @Override
     public Header<OrderDetailApiResponse> read(Long id) {
-        return orderDetailRepository.findById(id)
+        return baseRepository.findById(id)
                                     .map(orderDetail -> response(orderDetail))
                                     .orElseGet(() -> Header.ERROR("No Existed Data"));
     }
@@ -50,14 +45,14 @@ public class OrderDetailAPiService implements CrudInterface<OrderDetailApiReques
     @Override
     public Header<OrderDetailApiResponse> update(Header<OrderDetailApiRequest> request) {
         OrderDetailApiRequest orderDetailApiRequest = request.getData();
-        return orderDetailRepository.findById(orderDetailApiRequest.getId())
+        return baseRepository.findById(orderDetailApiRequest.getId())
                                     .map(entityOrderDetail -> entityOrderDetail.setStatus(orderDetailApiRequest.getStatus())
                                                                                .setArrivalDate(orderDetailApiRequest.getArrivalDate())
                                                                                .setQuantity(orderDetailApiRequest.getQuantity())
                                                                                .setTotalPrice(orderDetailApiRequest.getTotalPrice())
                                                                                .setItem(itemRepository.findById(orderDetailApiRequest.getItemId()).orElseThrow(NoSuchElementException::new))
                                                                                .setOrderGroup(orderGroupRepository.findById(orderDetailApiRequest.getOrderGroupId()).orElseThrow(NoSuchElementException::new)))
-                                    .map(orderDetailRepository::save)
+                                    .map(baseRepository::save)
                                     .map(this::response)
                                     .orElseGet(() -> Header.ERROR("No Existed Data"));
 
@@ -65,12 +60,12 @@ public class OrderDetailAPiService implements CrudInterface<OrderDetailApiReques
 
     @Override
     public Header delete(Long id) {
-        return orderDetailRepository.findById(id)
-                                    .map(orderDetail -> {
-                                        orderDetailRepository.delete(orderDetail);
-                                        return Header.OK();
-                                    })
-                                    .orElseGet(() -> Header.ERROR("No Existed Data"));
+        return baseRepository.findById(id)
+                             .map(orderDetail -> {
+                                 baseRepository.delete(orderDetail);
+                                 return Header.OK();
+                             })
+                             .orElseGet(() -> Header.ERROR("No Existed Data"));
     }
 
     private Header<OrderDetailApiResponse> response(OrderDetail orderDetail) {

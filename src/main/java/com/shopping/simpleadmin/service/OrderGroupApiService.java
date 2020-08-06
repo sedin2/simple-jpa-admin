@@ -1,11 +1,9 @@
 package com.shopping.simpleadmin.service;
 
-import com.shopping.simpleadmin.ifs.CrudInterface;
 import com.shopping.simpleadmin.model.entitiy.OrderGroup;
 import com.shopping.simpleadmin.model.network.Header;
 import com.shopping.simpleadmin.model.network.request.OrderGroupApiRequest;
 import com.shopping.simpleadmin.model.network.response.OrderGroupApiResponse;
-import com.shopping.simpleadmin.repository.OrderGroupRepository;
 import com.shopping.simpleadmin.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +12,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
-public class OrderGroupApiService implements CrudInterface<OrderGroupApiRequest, OrderGroupApiResponse> {
-
-    @Autowired
-    private OrderGroupRepository orderGroupRepository;
+public class OrderGroupApiService extends BaseService<OrderGroupApiRequest, OrderGroupApiResponse, OrderGroup> {
 
     @Autowired
     private UserRepository userRepository;
@@ -37,44 +32,44 @@ public class OrderGroupApiService implements CrudInterface<OrderGroupApiRequest,
                                           .arrivalDate(LocalDateTime.now().plusDays(3L))
                                           .user(userRepository.findById(orderGroupApiRequest.getUserId()).orElseThrow(NoSuchElementException::new))
                                           .build();
-        OrderGroup newOrderGroup = orderGroupRepository.save(orderGroup);
+        OrderGroup newOrderGroup = baseRepository.save(orderGroup);
         return response(newOrderGroup);
     }
 
     @Override
     public Header<OrderGroupApiResponse> read(Long id) {
-        return orderGroupRepository.findById(id)
-                                   .map(orderGroup -> response(orderGroup))
-                                   .orElseGet(() -> Header.ERROR("No Existed Data"));
+        return baseRepository.findById(id)
+                             .map(orderGroup -> response(orderGroup))
+                             .orElseGet(() -> Header.ERROR("No Existed Data"));
     }
 
     @Override
     public Header<OrderGroupApiResponse> update(Header<OrderGroupApiRequest> request) {
         OrderGroupApiRequest orderGroupApiRequest = request.getData();
-        return orderGroupRepository.findById(orderGroupApiRequest.getId())
-                                   .map(entityOrderGroup -> entityOrderGroup.setStatus(orderGroupApiRequest.getStatus())
-                                                                            .setOrderType(orderGroupApiRequest.getOrderType())
-                                                                            .setRevAddress(orderGroupApiRequest.getRevAddress())
-                                                                            .setRevName(orderGroupApiRequest.getRevName())
-                                                                            .setPaymentType(orderGroupApiRequest.getPaymentType())
-                                                                            .setTotalPrice(orderGroupApiRequest.getTotalPrice())
-                                                                            .setTotalQuantity(orderGroupApiRequest.getTotalQuantity())
-                                                                            .setOrderAt(orderGroupApiRequest.getOrderAt())
-                                                                            .setArrivalDate(orderGroupApiRequest.getArrivalDate())
-                                                                            .setUser(userRepository.findById(orderGroupApiRequest.getUserId()).orElseThrow(NoSuchElementException::new)))
-                                   .map(newOrderGroup -> orderGroupRepository.save(newOrderGroup))
-                                   .map(orderGroup -> response(orderGroup))
-                                   .orElseGet(() -> Header.ERROR("No Existed Data"));
+        return baseRepository.findById(orderGroupApiRequest.getId())
+                             .map(entityOrderGroup -> entityOrderGroup.setStatus(orderGroupApiRequest.getStatus())
+                                                                      .setOrderType(orderGroupApiRequest.getOrderType())
+                                                                      .setRevAddress(orderGroupApiRequest.getRevAddress())
+                                                                      .setRevName(orderGroupApiRequest.getRevName())
+                                                                      .setPaymentType(orderGroupApiRequest.getPaymentType())
+                                                                      .setTotalPrice(orderGroupApiRequest.getTotalPrice())
+                                                                      .setTotalQuantity(orderGroupApiRequest.getTotalQuantity())
+                                                                      .setOrderAt(orderGroupApiRequest.getOrderAt())
+                                                                      .setArrivalDate(orderGroupApiRequest.getArrivalDate())
+                                                                      .setUser(userRepository.findById(orderGroupApiRequest.getUserId()).orElseThrow(NoSuchElementException::new)))
+                             .map(newOrderGroup -> baseRepository.save(newOrderGroup))
+                             .map(orderGroup -> response(orderGroup))
+                             .orElseGet(() -> Header.ERROR("No Existed Data"));
     }
 
     @Override
     public Header delete(Long id) {
-        return orderGroupRepository.findById(id)
-                                   .map(orderGroup -> {
-                                       orderGroupRepository.delete(orderGroup);
-                                       return Header.OK();
-                                   })
-                                   .orElseGet(() -> Header.ERROR("No Existed Data"));
+        return baseRepository.findById(id)
+                             .map(orderGroup -> {
+                                 baseRepository.delete(orderGroup);
+                                 return Header.OK();
+                             })
+                             .orElseGet(() -> Header.ERROR("No Existed Data"));
     }
 
     private Header<OrderGroupApiResponse> response(OrderGroup orderGroup) {

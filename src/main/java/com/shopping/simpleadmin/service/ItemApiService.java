@@ -1,12 +1,10 @@
 package com.shopping.simpleadmin.service;
 
-import com.shopping.simpleadmin.ifs.CrudInterface;
 import com.shopping.simpleadmin.model.entitiy.Item;
 import com.shopping.simpleadmin.model.enumclass.ItemStatus;
 import com.shopping.simpleadmin.model.network.Header;
 import com.shopping.simpleadmin.model.network.request.ItemApiRequest;
 import com.shopping.simpleadmin.model.network.response.ItemApiResponse;
-import com.shopping.simpleadmin.repository.ItemRepository;
 import com.shopping.simpleadmin.repository.PartnerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +14,7 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
-public class ItemApiService implements CrudInterface<ItemApiRequest, ItemApiResponse> {
-
-    @Autowired
-    private ItemRepository itemRepository;
+public class ItemApiService extends BaseService<ItemApiRequest, ItemApiResponse, Item> {
 
     @Autowired
     private PartnerRepository partnerRepository;
@@ -38,13 +33,13 @@ public class ItemApiService implements CrudInterface<ItemApiRequest, ItemApiResp
                         .partner(partnerRepository.findById(itemApiRequest.getPartnerId())
                                                   .orElseThrow(NoSuchElementException::new))
                         .build();
-        Item newItem = itemRepository.save(item);
+        Item newItem = baseRepository.save(item);
         return response(newItem);
     }
 
     @Override
     public Header<ItemApiResponse> read(Long id) {
-        return itemRepository.findById(id)
+        return baseRepository.findById(id)
                              .map(item -> response(item))
                              .orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
@@ -52,7 +47,7 @@ public class ItemApiService implements CrudInterface<ItemApiRequest, ItemApiResp
     @Override
     public Header<ItemApiResponse> update(@RequestBody Header<ItemApiRequest> request) {
         ItemApiRequest itemApiRequest = request.getData();
-        return itemRepository.findById(itemApiRequest.getId())
+        return baseRepository.findById(itemApiRequest.getId())
                              .map(entityItem -> entityItem.setStatus(itemApiRequest.getStatus())
                                                           .setName(itemApiRequest.getName())
                                                           .setTitle(itemApiRequest.getTitle())
@@ -61,15 +56,15 @@ public class ItemApiService implements CrudInterface<ItemApiRequest, ItemApiResp
                                                           .setBrandName(itemApiRequest.getBrandName())
                                                           .setRegisteredAt(itemApiRequest.getRegisteredAt())
                                                           .setUnregisteredAt(itemApiRequest.getUnregisteredAt()))
-                             .map(newEntityItem -> itemRepository.save(newEntityItem))
+                             .map(newEntityItem -> baseRepository.save(newEntityItem))
                              .map(item -> response(item))
                              .orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
 
     @Override
     public Header delete(Long id) {
-        return itemRepository.findById(id).map(item -> {
-            itemRepository.delete(item);
+        return baseRepository.findById(id).map(item -> {
+            baseRepository.delete(item);
             return Header.OK();
         }).orElseGet(() -> Header.ERROR("Not Existed Data"));
     }
